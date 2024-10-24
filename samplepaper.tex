@@ -19,136 +19,203 @@
 %\renewcommand\UrlFont{\color{blue}\rmfamily}
 %\urlstyle{rm}
 %
+\usepackage{subcaption}
+
 \begin{document}
 %
-\title{Contribution Title}
+\title{Theorem View: A framework to Extract Theorem like environments from raw PDFs}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{First Author\inst{1}\orcidID{0000-1111-2222-3333} \and
-Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
-Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
-%
-\authorrunning{F. Author et al.}
+\author{Shrey Mishra\inst{1}\orcidID{0000-0000-0000-0000} \and
+Neil Sharma\inst{2}\orcidID{0000-0000-0000-0000} \and
+Antoine Gauquier\inst{1}\orcidID{0000-0000-0000-0000} \and
+Pierre Senellart\inst{1,3}\orcidID{0000-0000-0000-0000}}
+
+\authorrunning{S. Mishra et al.}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
-%
-\institute{Princeton University, Princeton NJ 08544, USA \and
-Springer Heidelberg, Tiergartenstr. 17, 69121 Heidelberg, Germany
-\email{lncs@springer.com}\\
-\url{http://www.springer.com/gp/computer-science/lncs} \and
-ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
-\email{\{abc,lncs\}@uni-heidelberg.de}}
-%
+
+\institute{DI ENS, ENS, CNRS, PSL University, Inria, Paris, France \\
+\email{shrey.mishra@ens.psl.eu, antoine.gauquier@ens.psl.eu, pierre@senellart.com}
+\and
+Malaviya National Institute of Technology \\
+\email{neil.sharma3000@gmail.com}
+\and
+Institut Universitaire de France (IUF)
+}
+
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-The abstract should briefly summarize the contents of the paper in
-150--250 words.
+This paper presents TheoremView, a novel modular multimodal framework designed 
+to extract proofs and theorems from scientific papers in their raw PDF format, 
+without requiring access to LaTeX source files. Our approach leverages three 
+distinct modalities—font, text, and vision—to accurately identify and classify 
+proof and theorem-like environments. We incorporate a sequential component to capture 
+long-term dependencies, including page breaks and layout information. 
+TheoremView employs a combination of specialized models trained to recognize 
+and extract these critical elements from academic documents. By eliminating 
+the need for OCR preprocessing, our method significantly reduces computational 
+overhead, making it feasible for real-time applications. This innovative 
+approach offers a robust solution for automated theorem extraction, potentially 
+enhancing accessibility and analysis of mathematical content in scientific 
+literature.
 
-\keywords{First keyword  \and Second keyword \and Another keyword.}
+\keywords{Theorem extraction \and Multimodal learning \and Document analysis \and Machine learning \and Natural language processing}
 \end{abstract}
 %
 %
 %
-\section{First Section}
-\subsection{A Subsection Sample}
-Please note that the first paragraph of a section or subsection is
-not indented. The first paragraph that follows a table, figure,
-equation etc. does not need an indent, either.
+\section{Introduction}
+\subsection{Motivation for Theorem Extraction}
+In contemporary scientific research, articles are primarily published as PDFs, and many 
+search engines index entire papers instead of specific scientific results. This paper 
+contributes to TheoremKB ~\cite{acl-doc-eng}, a project focused on building a knowledge base of mathematical 
+results across different fields of science. The objective is to improve the accessibility of 
+relevant information for researchers, allowing for more effective retrieval and utilization 
+of scientific knowledge.
 
-Subsequent paragraphs, however, are indented.
+Having such a knowledge base can significantly impact the way researchers find information. 
+Some advantages of this system include:
 
-\subsubsection{Sample Heading (Third Level)} Only two levels of
-headings should be numbered. Lower level headings remain unnumbered;
-they are formatted as run-in headings.
+\begin{enumerate}
+    \item \textbf{Enhanced Accessibility}: TheoremKB streamlines the retrieval of specific 
+    proofs and theorems, allowing for quick access to targeted mathematical results, 
+    in contrast to traditional search engines that index full-text papers.
 
-\paragraph{Sample Heading (Fourth Level)}
-The contribution should contain no more than four levels of
-headings. Table~\ref{tab1} gives a summary of all heading levels.
+    \item \textbf{Facilitated Knowledge Discovery}: This knowledge base assists researchers 
+    in uncovering connections between disparate mathematical results and their applications, 
+    thereby enhancing the exploration of specific results, such as NP-hardness in relation to 
+    the vertex cover problem.
 
-\begin{table}
-\caption{Table captions should be placed above the
-tables.}\label{tab1}
-\begin{tabular}{|l|l|l|}
-\hline
-Heading level &  Example & Font size and style\\
-\hline
-Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
-1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
-2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
-3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
-4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
-\hline
-\end{tabular}
-\end{table}
+    \item \textbf{Identification of Theorem Interdependencies}: TheoremKB helps determine 
+    which theorems are used in the proofs of others, which is essential for assessing the 
+    impact of errors in foundational results.
 
+    \item \textbf{Support for Automated Reasoning}: The knowledge base provides a foundation 
+    for developing AI systems capable of automated theorem proving, promoting innovative 
+    approaches to mathematical problem-solving.
+\end{enumerate}
 
-\noindent Displayed equations are centered and set on a separate
-line.
-\begin{equation}
-x + y = z
-\end{equation}
-Please try to avoid rasterized images for line-art diagrams and
-schemas. Whenever possible, use vector graphics instead (see
-Fig.~\ref{fig1}).
+\subsection{Prior work on theorem/proof Extraction}
 
-\begin{figure}
-\includegraphics[width=\textwidth]{fig1.eps}
-\caption{A figure caption is always placed below the illustration.
-Please note that short captions are centered, while long ones are
-justified by the macro package automatically.} \label{fig1}
+Previous attempts to address this task include the work presented in~\cite{doceng_paper}, which focused on 
+initial explorations of extraction from PDFs framed as object detection and text classification problems. 
+This approach utilized font visuals and text modalities but operated only at the textline level. Subsequent 
+research, such as~\cite{jcdl_paper}, refined the methodology by incorporating contextual information 
+surrounding paragraphs and employing multimodal systems to unify the extraction model.
+
+The TheoremView framework offers a user interface to visualize the results extracted by various models in 
+an end-to-end system that directly takes PDFs as input and displays the extracted results. It is designed 
+modularly, allowing users to select which model to utilize for extraction, thereby leveraging different 
+modalities that highlight the strengths and weaknesses of each approach. This flexibility enables users 
+to run models on low-compute hardware, such as systems without GPU instances, for inference. The primary 
+objective of this paper is to present an easy-to-use interface that facilitates preprocessing and inference 
+in a modular manner.
+
+\section{Methodology}
+We propose a modular approach to extract raw information from PDFs. We utilize Grobid and pdfalto to convert 
+the documents into valid XML formats. The XML generated by Grobid organizes the content into paragraphs, 
+while the XML from pdfalto provides details segmented into text lines along with associated font information. 
+We then employ a merging script to correlate the font information with each paragraph extracted by Grobid. 
+This process yields a CSV file structured by paragraphs, where each row includes the spatial location of the 
+paragraph on the page (indicating page number and vertical and horizontal coordinates), the textual content 
+extracted from Grobid, and the font information used within those paragraphs.
+
+Importantly, we do not rely on any OCR preprocessing; instead, we leverage PDFALTO and Grobid, which are 
+specialized tools that efficiently extract information from scientific articles. It is crucial to note that 
+while we do not use LaTeX sources during inference, they are utilized solely for generating ground truths 
+during model training.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/preprocessing.pdf}
+    \caption{Data pipeline for extracting and processing information from PDFs.}
+    \label{fig:datapipeline}
 \end{figure}
 
-\begin{theorem}
-This is a sample theorem. The run-in heading is set in bold, while
-the following text appears in italics. Definitions, lemmas,
-propositions, and corollaries are styled the same way.
-\end{theorem}
-%
-% the environments 'definition', 'lemma', 'proposition', 'corollary',
-% 'remark', and 'example' are defined in the LLNCS documentclass as well.
-%
-\begin{proof}
-Proofs, examples, and remarks have the initial word in italics,
-while the following text appears in normal font.
-\end{proof}
-For citations of references, we prefer the use of square brackets
-and consecutive numbers. Citations using labels or the author/year
-convention are also acceptable. The following bibliography provides
-a sample reference list with entries for journal
-articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
-book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
-and a homepage~\cite{ref_url1}. Multiple citations are grouped
-\cite{ref_article1,ref_lncs1,ref_book1},
-\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
+Once the information is stored in CSV format, we process the font information using an LSTM model, where 
+each font is encoded as a unique token to train the network. Simultaneously, we utilize the bitmap image 
+rendering of each paragraph to train an EfficientNetV2 model. Additionally, we employ a language model, 
+pretrained from scratch in our case, to make predictions based on the text modality. Subsequently, we 
+integrate all three trained models into a multimodal architecture, freezing their weights and adding 
+additional layers to capture intermodality interactions through mechanisms like Gated Multimodal Units 
+(GMU) or cross-modality attention.
 
-\begin{credits}
-\subsubsection{\ackname} A bold run-in heading in small font size at the end of the paper is
-used for general acknowledgments, for example: This study was funded
-by X (grant number Y).
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/general_pipeline.pdf}
+    \caption{Multimodal Framework for Theorem Extraction from PDFs}
+    \label{fig:generalpipeline}
+\end{figure}
 
-\subsubsection{\discintname}
-It is now necessary to declare any competing interests or to specifically
-state that the authors have no competing interests. Please place the
-statement with a bold run-in heading in small font size beneath the
-(optional) acknowledgments\footnote{If EquinOCS, our proceedings submission
-system, is used, then the disclaimer can be provided directly in the system.},
-for example: The authors have no competing interests to declare that are
-relevant to the content of this article. Or: Author A has received research
-grants from Company W. Author B has received a speaker honorarium from
-Company X and owns stock in Company Y. Author C is a member of committee Z.
-\end{credits}
-%
-% ---- Bibliography ----
-%
-% BibTeX users should specify bibliography style 'splncs04'.
-% References will then be sorted and formatted in the correct style.
-%
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
+
+With a set of base features extracted from either the unimodal or multimodal approaches, we generate 
+features for all paragraphs within the PDF. This process incorporates normalized page information, 
+normalized coordinate data for each paragraph, and paragraph embeddings derived from the raw features 
+just before the softmax layer. To capture sequential information across multiple paragraphs, we train a 
+Conditional Random Field (CRF) or transformer layer atop the extracted features. The goal is to utilize 
+relative information to contextualize each paragraph and accurately determine its label. Our model 
+categorizes paragraphs into four major classes: (1) Proof-like, (2) Theorem-like, (3) Basic (neither 
+proof nor theorem), and (4) an Overlap reject class that arises from preprocessing discrepancies.
+
+\section{Demonstation scenario}
+
+
+The UI of the demo is organized into several segments, each serving a specific function:
+
+\begin{enumerate}
+    \item \textbf{Upload and Process}: Users can upload a PDF for processing or select from a list of previously 
+    cached examples. The system processes the PDF by applying Grobid and pdfalto, converting each page into a bitmap image, 
+    and merging the XML outputs from pdfalto and Grobid to generate a preprocessed \texttt{data.csv} file.
+
+    \item \textbf{Predict and Preview}: Users can choose which base model to apply, either unimodal or multimodal, along with 
+    sequential processing of paragraphs using a Conditional Random Field (CRF), transformer, or no sequential processing at all, 
+    allowing for a total of 12 possible combinations. Additionally, users have the option to preview or download the results 
+    (see Figure~3 for visualization of results).
+
+    \item \textbf{Buttons}: This section includes a visual representation of the buttons available in the UI.
+
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/buttons.png}
+            \caption{UI Buttons for various actions in the demo.}
+            \label{fig:buttons}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/extractions.png}
+            \caption{Extracted Information in PNG format.}
+            \label{fig:extractions}
+        \end{subfigure}
+        \vskip\baselineskip
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/json_output.png}
+            \caption{Extracted Information in JSON format.}
+            \label{fig:json_output}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/vis_on_pdf.png}
+            \caption{Visualizations overlaid on the PDF.}
+            \label{fig:vis_on_pdf}
+        \end{subfigure}
+        \caption{Various visual elements in the demo.}
+        \label{fig:combined}
+    \end{figure}
+
+    \item \textbf{Summary and Statistics}: This section provides a breakdown of the inference time for the current run, as well as 
+    for any previous runs that have been cached, enabling comparative analysis (see UI~6 diagram).
+\end{enumerate}
+
 %
 \begin{thebibliography}{8}
 \bibitem{ref_article1}
