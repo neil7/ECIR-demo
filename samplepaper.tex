@@ -164,8 +164,15 @@ proof nor theorem), and (4) an Overlap reject class that arises from preprocessi
 
 \section{Demonstation scenario}
 
+The UI of the demo is organized into several segments (for an overview see figure \ref{fig:system-arch}), each serving a specific function:
 
-The UI of the demo is organized into several segments, each serving a specific function:
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{images/system-arch.png}
+    \caption{Systems architecture of the various UI components
+    }
+    \label{fig:system-arch}
+\end{figure}
 
 \begin{enumerate}
     \item \textbf{Upload and Process}: Users can upload a PDF for processing or select from a list of previously 
@@ -211,7 +218,14 @@ The UI of the demo is organized into several segments, each serving a specific f
     \end{figure}
 
     \item \textbf{Summary and Statistics}: This section provides a breakdown of the inference time for the current run, as well as 
-    for any previous runs that have been cached, enabling comparative analysis (see UI~6 diagram).
+    for any previous runs that have been cached, enabling comparative analysis (see figure \ref{fig:model_comp}).
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth]{images/comparitive.png}
+        \caption{Comparisons of predictions from different model runs}
+        \label{fig:model_comp}
+    \end{figure}
 \end{enumerate}
 
 %
