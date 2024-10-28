@@ -31,8 +31,8 @@
 %
 \author{Shrey Mishra\inst{1}\orcidID{0000-0000-0000-0000} \and
 Neil Sharma\inst{2}\orcidID{0000-0000-0000-0000} \and
-Antoine Gauquier\inst{1}\orcidID{0000-0000-0000-0000} \and
-Pierre Senellart\inst{1,3}\orcidID{0000-0000-0000-0000}}
+Antoine Gauquier\inst{1}\orcidID{0009-0005-9573-6364} \and
+Pierre Senellart\inst{1,3}\orcidID{0000-0002-7909-5369}}
 
 \authorrunning{S. Mishra et al.}
 % First names are abbreviated in the running head.
@@ -137,13 +137,13 @@ during model training.
     \label{fig:datapipeline}
 \end{figure}
 
-Once the information is stored in CSV format, we process the font information using an LSTM model, where 
+Once the information is stored in CSV format, we process the font information using an LSTM~\cite{hochreiter1997long} model, where 
 each font is encoded as a unique token to train the network. Simultaneously, we utilize the bitmap image 
 rendering of each paragraph to train an EfficientNetV2 model \cite{efficientnet}. Additionally, we employ a language model, 
 pretrained from scratch in our case, to make predictions based on the text modality. Subsequently, we 
 integrate all three trained models into a multimodal architecture, freezing their weights and adding 
 additional layers to capture intermodality interactions through mechanisms like Gated Multimodal Units 
-(GMU) or cross-modality attention.
+(GMU)~\cite{arevalo2020gated} or cross-modality attention.
 
 \begin{figure}[h]
     \centering
@@ -157,14 +157,14 @@ With a set of base features extracted from either the unimodal or multimodal app
 features for all paragraphs within the PDF. This process incorporates normalized page information, 
 normalized coordinate data for each paragraph, and paragraph embeddings derived from the raw features 
 just before the softmax layer. To capture sequential information across multiple paragraphs, we train a 
-Conditional Random Field (CRF) or transformer layer atop the extracted features. The goal is to utilize 
+Conditional Random Field (CRF)~\cite{crf} or transformer layer atop the extracted features. The goal is to utilize 
 relative information to contextualize each paragraph and accurately determine its label. Our model 
 categorizes paragraphs into four major classes: (1) Proof-like, (2) Theorem-like, (3) Basic (neither 
 proof nor theorem), and (4) an Overlap reject class that arises from preprocessing discrepancies.
 
 \section{Demonstation scenario}
 
-The UI of the demo is organized into several segments (for an overview see figure \ref{fig:system-arch}), each serving a specific function:
+The UI of the demo is organized into several segments (for an overview see Figure~\ref{fig:system-arch}), each serving a specific function:
 
 \begin{figure}[h]
     \centering
@@ -180,7 +180,7 @@ The UI of the demo is organized into several segments (for an overview see figur
     and merging the XML outputs from pdfalto and Grobid to generate a preprocessed \texttt{data.csv} file.
 
     \item \textbf{Predict and Preview}: Users can choose which base model to apply, either unimodal or multimodal, along with 
-    sequential processing of paragraphs using a Conditional Random Field (CRF) \cite{crf}, transformer, or no sequential processing at all, 
+    sequential processing of paragraphs using a Conditional Random Field (CRF), transformer, or no sequential processing at all, 
     allowing for a total of 12 possible combinations. Additionally, users have the option to preview or download the results 
     (see Figure~3 for visualization of results).
 
@@ -218,7 +218,7 @@ The UI of the demo is organized into several segments (for an overview see figur
     \end{figure}
 
     \item \textbf{Summary and Statistics}: This section provides a breakdown of the inference time for the current run, as well as 
-    for any previous runs that have been cached, enabling comparative analysis (see figure \ref{fig:model_comp}).
+    for any previous runs that have been cached, enabling comparative analysis (see Figure~\ref{fig:model_comp}).
 
     \begin{figure}[h]
         \centering
@@ -238,6 +238,12 @@ Mishra, S., Brihmouche, Y., Delemazure, T., Gauquier, A., Senellart, P.: First s
 
 \bibitem{jcdl_paper}
 Mishra, S., Gauquier, A., Senellart, P.: Multimodal Machine Learning for Extraction of Theorems and Proofs in the Scientific Literature. CoRR abs/2307.09047 (2023). \doi{10.48550/arXiv.2307.09047}
+
+\bibitem{hochreiter1997long}
+Hochreiter, S., Schmidhuber, J.:  Long short-term memory. In: Neural computation 9, 8 (1997)
+
+\bibitem{arevalo2020gated}
+Arevalo, J., Solorio, T., Montes-y Gómez, M., A González, F.: Gated multimodal networks. In: Neural Computing and Applications 32 (2020). 
 
 \bibitem{GROBID}
 GROBID: \url{https://github.com/kermitt2/grobid}, GitHub (2008--2024). swh:1:dir:dab86b296e3c3216e2241968f0d63b68e8209d3c
