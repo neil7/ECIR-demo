@@ -174,6 +174,8 @@ The UI of the demo is organized into several segments (for an overview see Figur
     \label{fig:system-arch}
 \end{figure}
 
+The TheoremView demo interface is built using Streamlit and follows a modular architecture organized into distinct functional components. The frontend allows users to upload PDFs or select from cached samples, which then undergo metadata processing using Grobid and pdfalto tools. The processed data is stored as CSV files in the file storage component. The processing pipeline enables users to select and run various ML models (unimodal or multimodal) on the processed data. The ML pipeline component processes the data through multiple stages - calculating processing time, generating bounding boxes for visual elements, creating cropped images of detected theorems/proofs, and producing analytical graphs. These outputs are aggregated into comprehensive summary results. The system implements an efficient caching mechanism where frequently accessed PDFs and their corresponding ML model results are stored as pickle files, enabling instant retrieval without reprocessing. This architecture ensures smooth user interaction while maintaining high performance through optimized data flow and storage strategies.
+
 \begin{enumerate}
     \item \textbf{Upload and Process}: Users can upload a PDF for processing or select from a list of previously 
     cached examples. The system processes the PDF by applying Grobid and pdfalto, converting each page into a bitmap image, 
