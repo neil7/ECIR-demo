@@ -123,7 +123,8 @@ while the XML from pdfalto provides details segmented into text lines along with
 We then employ a merging script to correlate the font information with each paragraph extracted by Grobid. 
 This process yields a CSV file structured by paragraphs, where each row includes the spatial location of the 
 paragraph on the page (indicating page number, and both vertical and horizontal coordinates), the textual content 
-extracted from Grobid, and the font information used within those paragraphs.
+extracted from Grobid, and the font information used within those paragraphs. For a schematic diagram on data pipeline
+refer to figure \ref{fig:datapipeline}.
 
 Importantly, we do not rely on any OCR preprocessing; instead, we leverage PDFALTO and Grobid, which are 
 specialized tools that efficiently extract information from scientific articles. It is crucial to note that 
@@ -141,14 +142,15 @@ Once the information is stored in CSV format, we process the font information us
 each font is encoded as a unique token to train the network. Simultaneously, we utilize the bitmap image 
 rendering of each paragraph to train an EfficientNetV2 model \cite{efficientnet}. Additionally, we employ a language model, 
 pretrained from scratch in our case, to make predictions based on the tex modality. Subsequently, we 
-integrate all three trained models into a multimodal architecture, freezing their weights and adding 
+integrate all three trained models into a unified multimodal architecture, freezing their weights of each modality backbone and adding 
 additional layers to capture intermodality interactions through mechanisms like Gated Multimodal Units 
-(GMU)~\cite{arevalo2020gated} or cross-modality attention.
+(GMU)~\cite{arevalo2020gated} or cross-modality attention that capture intermodality dependencies. Refer to figure \ref{fig:generalpipeline} for feature extraction.
+
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{images/general_pipeline.pdf}
-    \caption{Multimodal Framework for Theorem Extraction from PDFs}
+    \caption{Model inference from various modality (adding the sequential paragraph component)}
     \label{fig:generalpipeline}
 \end{figure}
 
@@ -157,7 +159,7 @@ With a set of base features extracted from either the unimodal or multimodal app
 features for all paragraphs within the PDF. This process incorporates normalized page information, 
 normalized coordinate data for each paragraph, and paragraph embeddings derived from the raw features 
 just before the softmax layer. To capture sequential information across multiple paragraphs, we train a 
-Conditional Random Field (CRF)~\cite{crf} or transformer layer atop the extracted features. The goal is to utilize 
+Conditional Random Field (CRF)~\cite{crf} or Transformer layer on top of the extracted features. The goal is to utilize 
 relative information to contextualize each paragraph and accurately determine its label. Our model 
 categorizes paragraphs into four major classes: (1) Proof-like, (2) Theorem-like, (3) Basic (neither 
 proof nor theorem), and (4) an Overlap reject class that arises from preprocessing discrepancies.
@@ -168,7 +170,7 @@ The UI of the demo is organized into several segments (for an overview see Figur
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{images/system-arch.png}
+    \includegraphics[width=\textwidth]{images/sys-demo-arch.png}
     \caption{Systems architecture of the various UI components
     }
     \label{fig:system-arch}
@@ -182,7 +184,7 @@ The TheoremView demo interface is built using Streamlit and follows a modular ar
     and merging the XML outputs from pdfalto and Grobid to generate a preprocessed \texttt{data.csv} file.
 
     \item \textbf{Predict and Preview}: Users can choose which base model to apply, either unimodal or multimodal, along with 
-    sequential processing of paragraphs using a Conditional Random Field (CRF), transformer, or no sequential processing at all, 
+    sequential processing of paragraphs using a Conditional Random Field (CRF), Transformer, or no sequential processing at all, 
     allowing for a total of 12 possible combinations. Additionally, users have the option to preview or download the results 
     (see Figure~3 for visualization of results).
 
