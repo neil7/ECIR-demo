@@ -150,8 +150,8 @@ during model training.
 
 Once the information is stored in CSV format, we process the font information using an \textbf{LSTM}~\cite{hochreiter1997long} model, where 
 each font is encoded as a unique token to train the network. Simultaneously, we utilize the bitmap image 
-rendering of each paragraph to train an \textbf{EfficientNetV2} model \cite{efficientnet}. Additionally, we employ a language model, 
-pretrained from scratch in our case, to make predictions based on the tex modality. Subsequently, we 
+rendering of each paragraph to train an \textbf{EfficientNetV2} model \cite{efficientnet}. Additionally, we employ a pretrained from scratch \textbf{RoBERTa} language model \cite{mishra2024modularmultimodalmachinelearning}, 
+on scientific corpus, to make predictions based on the tex modality. Subsequently, we 
 integrate all three trained models into a unified multimodal architecture, freezing their weights of each modality backbone and adding 
 additional layers to capture intermodality interactions through mechanisms like Gated Multimodal Units 
 (GMU)~\cite{arevalo2020gated} or cross-modality attention similar to ViLBERT~\cite{DBLP:conf/nips/LuBPL19} that capture intermodality dependencies. Refer to Figure \ref{fig:generalpipeline} for feature extraction.
@@ -264,6 +264,11 @@ and storage strategies.
 
 %
 \begin{thebibliography}{10}
+
+\bibitem{mishra2024modularmultimodalmachinelearning}
+Mishra, S., Gauquier, A., Senellart, P.: Modular Multimodal Machine Learning for Extraction of Theorems and Proofs in Long Scientific Documents (Extended Version). arXiv preprint arXiv:2307.09047 (2024). \url{https://arxiv.org/abs/2307.09047}
+
+
 \bibitem{doceng_paper}
 Mishra, S., Pluvinage, L., Senellart, P.: Towards extraction of theorems and proofs in scholarly articles. In: Healy, P., Bilauca, M., Bonnici, A. (eds.) DocEng '21: ACM Symposium on Document Engineering 2021, Limerick, Ireland, August 24-27, 2021, pp. 25:1--25:4. Association for Computing Machinery, New York, NY, USA (2021). \doi{10.1145/3469096.3475059}
 
