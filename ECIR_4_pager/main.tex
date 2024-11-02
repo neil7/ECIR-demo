@@ -140,10 +140,10 @@ normalized coordinate data for each paragraph, and paragraph embeddings derived 
 just before the softmax layer. To capture sequential information across multiple paragraphs, we train a 
 Conditional Random Field (CRF)~\cite{crf} or Transformer layer on top of the extracted features. The goal is to utilize 
 relative information to contextualize each paragraph and accurately determine its label. Our model 
-categorizes paragraphs into four major classes: (1) \textbf{Proof-like}, (2) \textbf{Theorem-lik}, (3) \textbf{Basic} (neither 
+categorizes paragraphs into four major classes: (1) \textbf{Proof-like}, (2) \textbf{Theorem-like}, (3) \textbf{Basic} (neither 
 proof nor theorem), and (4) an \textbf{Overlap} reject class that arises from preprocessing discrepancies.
 
-\section{Demonstation scenario}
+\section{Demonstration scenario}
 
 The TheoremView demo interface, built using Streamlit, follows a modular architecture with distinct functional components. The frontend allows users to upload PDFs or select from cached samples for metadata processing using Grobid and pdfalto tools, with results stored as CSV files. Users can run various ML models (unimodal or multimodal) through a pipeline that calculates processing time, generates bounding boxes, creates cropped images of theorems/proofs, and produces analytical graphs. The system implements efficient caching using pickle files for frequently accessed PDFs and ML model results.
 
