@@ -60,19 +60,7 @@ Institut Universitaire de France (IUF)
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-This paper presents TheoremView, a novel framework designed 
-to extract proofs and theorems from scientific papers in their raw PDF format, 
-without requiring access to \LaTeX~source files. Our approach leverages three 
-distinct modalities (font, text, and vision) to accurately identify and classify 
-proof and theorem-like environments. We incorporate a sequential component to capture 
-long-term dependencies, including page breaks and layout information. 
-TheoremView employs a combination of specialized models trained to recognize 
-and extract these critical elements from academic documents. By eliminating 
-the need for OCR preprocessing, our method significantly reduces computational 
-overhead, making it feasible for real-time applications. This innovative 
-approach offers a robust solution for automated theorem extraction, potentially 
-enhancing accessibility and analysis of mathematical content in scientific 
-literature. Our framework is publicly available, with code and documentation at \url{https://gitlab.di.ens.fr/mishra/sys-demo} and a demonstration video at \url{https://youtu.be/demo-link}.
+This paper presents TheoremView, a novel framework for extracting proofs and theorems from raw PDF scientific papers without requiring \LaTeX~source files. Our approach combines three modalities (\textbf{font}, \textbf{text}, and \textbf{vision}) with sequential modeling to capture long-term dependencies and layout information. By eliminating OCR preprocessing, TheoremView reduces computational overhead for real-time applications while providing robust automated theorem extraction. Our framework is publicly available at \url{https://gitlab.di.ens.fr/mishra/sys-demo}, with a demonstration video at \url{https://youtu.be/demo-link}.
 
 
 \keywords{Theorem extraction \and Multimodal learning \and Document analysis \and Machine learning \and Natural language processing}
@@ -86,9 +74,16 @@ search engines index entire papers instead of specific scientific results. This 
 contributes to TheoremKB ~\cite{doceng_paper}, a project focused on building a knowledge base of mathematical 
 results across different fields of science. The objective is to improve the accessibility of 
 relevant information for researchers, allowing for more effective retrieval and utilization 
-of scientific knowledge.
-
-TheoremKB offers several key advantages: (1) \textbf{Enhanced Accessibility} by streamlining the retrieval of specific proofs and theorems, allowing quick access to targeted mathematical results compared to traditional full-text search engines; (2) \textbf{Facilitated Knowledge Discovery} by helping researchers uncover connections between disparate mathematical results and their applications, such as exploring NP-hardness in relation to the vertex cover problem; (3) \textbf{Identification of Theorem Interdependencies} by determining which theorems are used in the proofs of others, essential for assessing the impact of errors in foundational results; and (4) \textbf{Support for Automated Reasoning} by providing a foundation for developing AI systems capable of automated theorem proving, promoting innovative approaches to mathematical problem-solving.
+of scientific knowledge. TheoremKB offers several key advantages:
+\begin{itemize}
+    \item \textbf{Enhanced Accessibility:} Streamlines the retrieval of specific proofs and theorems, allowing quick access to targeted mathematical results compared to traditional full-text search engines
+    
+    \item \textbf{Facilitated Knowledge Discovery:} Helps researchers uncover connections between disparate mathematical results and their applications, such as exploring NP-hardness in relation to the vertex cover problem
+    
+    \item \textbf{Identification of Theorem Interdependencies:} Determines which theorems are used in the proofs of others, essential for assessing the impact of errors in foundational results
+    
+    \item \textbf{Support for Automated Reasoning:} Provides a foundation for developing AI systems
+\end{itemize}
 
 \subsection{Prior work on Theorems and Proofs Extraction}
 
@@ -97,7 +92,6 @@ initial explorations of extraction from PDFs framed as object detection and text
 This approach utilized font visuals and text modalities but operated only at the text-line level. Subsequent 
 research, such as~\cite{mishra2024modularmultimodalmachinelearning}, refined the methodology by incorporating contextual information 
 surrounding paragraphs and employing multimodal systems to unify the extraction model.
-
 The TheoremView framework offers a user interface to visualize the results extracted by various models in 
 an end-to-end system that directly takes PDFs as input and displays the extracted results. It is designed 
 modularly, allowing users to select which model to utilize for extraction, thereby leveraging different 
@@ -116,11 +110,9 @@ paragraph on the page (indicating the page number as well as vertical and horizo
 extracted from Grobid, and the font information used within those paragraphs. For a schematic diagram on data pipeline
 refer to Figure \ref{fig:datapipeline}.
 
-
-
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/preprocessing.pdf}
+    \includegraphics[width=0.65\textwidth]{images/preprocessing.pdf}
     \caption{Data pipeline for extracting and processing information from PDFs.}
     \label{fig:datapipeline}
 \end{figure}
@@ -137,7 +129,7 @@ additional layers to capture intermodality interactions through mechanisms like 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{images/general_pipeline.pdf}
-    \caption{Model inference from various modality (adding the sequential paragraph component)}
+    \caption{Model inference pipeline (adding the sequential paragraph component)}
     \label{fig:generalpipeline}
 \end{figure}
 
@@ -152,7 +144,8 @@ categorizes paragraphs into four major classes: (1) \textbf{Proof-like}, (2) \te
 proof nor theorem), and (4) an \textbf{Overlap} reject class that arises from preprocessing discrepancies.
 
 \section{Demonstation scenario}
-The UI of the demo is organized into several segments (for an overview see Figure~\ref{fig:system-arch}), each serving a specific function:
+
+The TheoremView demo interface, built using Streamlit, follows a modular architecture with distinct functional components. The frontend allows users to upload PDFs or select from cached samples for metadata processing using Grobid and pdfalto tools, with results stored as CSV files. Users can run various ML models (unimodal or multimodal) through a pipeline that calculates processing time, generates bounding boxes, creates cropped images of theorems/proofs, and produces analytical graphs. The system implements efficient caching using pickle files for frequently accessed PDFs and ML model results.
 
 \begin{figure}[h]
     \centering
@@ -162,34 +155,19 @@ The UI of the demo is organized into several segments (for an overview see Figur
     \label{fig:system-arch}
 \end{figure}
 
-The TheoremView demo interface is built using Streamlit and follows a modular
-architecture organized into distinct functional components. The frontend
-allows users to upload PDFs or select from previously cached samples, which then
-undergo metadata processing using Grobid and pdfalto tools. The processed
-data is stored as CSV files in the file storage component. The processing 
-pipeline enables users to select and run various ML models (unimodal or 
-multimodal) on the processed data. The ML pipeline component processes the 
-data through multiple stages - calculating processing time, generating 
-bounding boxes for visual elements, creating cropped images of detected 
-theorems/proofs, and producing analytical graphs. These outputs are 
-aggregated into comprehensive summary results. The system implements an 
-efficient caching mechanism where frequently accessed PDFs and their 
-corresponding ML model results are stored as pickle files, enabling instant 
-retrieval without reprocessing. This architecture ensures smooth user 
-interaction while maintaining high performance through optimized data flow 
-and storage strategies.
+The UI of the demo is organized into several segments (for an overview see Figure~\ref{fig:system-arch}), each serving a specific function:
 
 \begin{enumerate}
-    \item \textbf{Upload and Process}: Users can upload a PDF for processing or select from a list of previously 
-    cached examples. The system processes the PDF by applying Grobid and pdfalto, converting each page into a bitmap image, 
-    and merging the XML outputs from pdfalto and Grobid to generate a preprocessed \texttt{data.csv} file.
+    \item \textbf{Upload and Process}: Users can upload PDFs or select from cached examples. The system processes PDFs using Grobid and pdfalto, converts pages to bitmap images, and merges XML outputs to generate a preprocessed \texttt{data.csv} file.
 
-    \item \textbf{Predict and Preview}: Users can choose which base model to apply, either unimodal or multimodal, along with 
-    sequential processing of paragraphs using a Conditional Random Field (CRF), Transformer, or no sequential processing at all, 
-    allowing for a total of 12 possible combinations. Additionally, users have the option to preview or download the results 
-    (see Figure \ref{fig:system-arch}).
+    \item \textbf{Predict and Preview}: Users can select unimodal or multimodal base models, with optional sequential processing using CRF, Transformer, or none, offering 12 possible combinations. Results can be previewed or downloaded (see Figure \ref{fig:predictions_and_vis}).
 
-    % \begin{figure}[h]
+    \item \textbf{Summary and Statistics}: Provides breakdown of inference time for current and cached runs, enabling comparative analysis.
+\end{enumerate}
+
+
+
+% \begin{figure}[h]
     %     \centering
     %     \begin{subfigure}{0.45\textwidth}
     %         \centering
@@ -222,16 +200,23 @@ and storage strategies.
     %     \label{fig:combined}
     % \end{figure}
 
-    \item \textbf{Summary and Statistics}: This section provides a breakdown of the inference time for the current run, as well as 
-    for any previous runs that have been cached, enabling comparative analysis (see Figure~\ref{fig:model_comp}).
-
-\end{enumerate}
-
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/comparitive-v3.png}
-    \caption{Comparisons of predictions from different model runs}
-    \label{fig:model_comp}
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/comparitive-v3.png}
+        \caption{Flow of information across paragraphs}
+        \label{fig:model_comp}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/vis_on_pdf.png}
+        \caption{Visualization of predictions annotated on the PDF}
+        \label{fig:vis_on_pdf}
+    \end{subfigure}
+    \caption{Visualizing model predictions}
+    \label{fig:predictions_and_vis}
 \end{figure}
 
 %
