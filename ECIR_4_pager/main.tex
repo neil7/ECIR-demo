@@ -40,7 +40,7 @@
 % an abbreviated paper title here
 %
 \author{Shrey Mishra\inst{1}\orcidID{0009-0004-2357-9593} \and
-Neil Sharma\inst{2}\orcidID{0009-0004-2357-9593} \and
+Neil Sharma\inst{2}\orcidID{0009-0003-8770-7374} \and
 Antoine Gauquier\inst{1}\orcidID{0009-0005-9573-6364} \and
 Pierre Senellart\inst{1,3}\orcidID{0000-0002-7909-5369}}
 
@@ -51,7 +51,7 @@ Pierre Senellart\inst{1,3}\orcidID{0000-0002-7909-5369}}
 \institute{DI ENS, ENS, CNRS, PSL University, Inria, Paris, France \\
 \email{shrey.mishra@ens.psl.eu, antoine.gauquier@ens.psl.eu, pierre@senellart.com}
 \and
-Malaviya National Institute of Technology \\
+Malaviya National Institute of Technology Jaipur \\
 \email{neil.sharma3000@gmail.com}
 \and
 Institut Universitaire de France (IUF)
@@ -140,7 +140,7 @@ normalized coordinate data for each paragraph, and paragraph embeddings derived 
 just before the softmax layer. To capture sequential information across multiple paragraphs, we train a 
 Conditional Random Field (CRF)~\cite{crf} or Transformer layer on top of the extracted features. The goal is to utilize 
 relative information to contextualize each paragraph and accurately determine its label. Our model 
-categorizes paragraphs into four major classes: (1) \textbf{Proof-like}, (2) \textbf{Theorem-like}, (3) \textbf{Basic} (neither 
+categorizes paragraphs into four major classes: (1) \textbf{Proof}, (2) \textbf{Theorem-like}, (3) \textbf{Basic} (neither 
 proof nor theorem), and (4) an \textbf{Overlap} reject class that arises from preprocessing discrepancies.
 
 \section{Demonstration Scenario}
