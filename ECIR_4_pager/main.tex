@@ -88,34 +88,14 @@ results across different fields of science. The objective is to improve the acce
 relevant information for researchers, allowing for more effective retrieval and utilization 
 of scientific knowledge.
 
-Having such a knowledge base can significantly impact the way researchers find information~\cite{mishra2024first}. 
-Some advantages of this system include:
-
-\begin{enumerate}
-    \item \textbf{Enhanced Accessibility}: TheoremKB streamlines the retrieval of specific 
-    proofs and theorems, allowing for quick access to targeted mathematical results, 
-    in contrast to traditional search engines that index full-text papers.
-
-    \item \textbf{Facilitated Knowledge Discovery}: This knowledge base assists researchers 
-    in uncovering connections between disparate mathematical results and their applications, 
-    thereby enhancing the exploration of specific results, such as NP-hardness in relation to 
-    the vertex cover problem.
-
-    \item \textbf{Identification of Theorem Interdependencies}: TheoremKB helps determine 
-    which theorems are used in the proofs of others, which is essential for assessing the 
-    impact of errors in foundational results.
-
-    \item \textbf{Support for Automated Reasoning}: The knowledge base provides a foundation 
-    for developing AI systems capable of automated theorem proving, promoting innovative 
-    approaches to mathematical problem-solving.
-\end{enumerate}
+TheoremKB offers several key advantages: (1) \textbf{Enhanced Accessibility} by streamlining the retrieval of specific proofs and theorems, allowing quick access to targeted mathematical results compared to traditional full-text search engines; (2) \textbf{Facilitated Knowledge Discovery} by helping researchers uncover connections between disparate mathematical results and their applications, such as exploring NP-hardness in relation to the vertex cover problem; (3) \textbf{Identification of Theorem Interdependencies} by determining which theorems are used in the proofs of others, essential for assessing the impact of errors in foundational results; and (4) \textbf{Support for Automated Reasoning} by providing a foundation for developing AI systems capable of automated theorem proving, promoting innovative approaches to mathematical problem-solving.
 
 \subsection{Prior work on Theorems and Proofs Extraction}
 
 Previous attempts to address this task include the work presented in~\cite{doceng_paper}, which focused on 
 initial explorations of extraction from PDFs framed as object detection and text classification problems. 
 This approach utilized font visuals and text modalities but operated only at the text-line level. Subsequent 
-research, such as~\cite{jcdl_paper}, refined the methodology by incorporating contextual information 
+research, such as~\cite{mishra2024modularmultimodalmachinelearning}, refined the methodology by incorporating contextual information 
 surrounding paragraphs and employing multimodal systems to unify the extraction model.
 
 The TheoremView framework offers a user interface to visualize the results extracted by various models in 
@@ -136,21 +116,18 @@ paragraph on the page (indicating the page number as well as vertical and horizo
 extracted from Grobid, and the font information used within those paragraphs. For a schematic diagram on data pipeline
 refer to Figure \ref{fig:datapipeline}.
 
-Importantly, we do not rely on any OCR preprocessing; instead, we leverage PDFALTO and Grobid, which are 
-specialized tools that efficiently extract information from scientific articles. It is crucial to note that 
-while we do not use \LaTeX~sources during inference, they are utilized solely for generating ground truths 
-during model training.
+
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{images/preprocessing.pdf}
+    \includegraphics[width=0.75\textwidth]{images/preprocessing.pdf}
     \caption{Data pipeline for extracting and processing information from PDFs.}
     \label{fig:datapipeline}
 \end{figure}
 
 Once the information is stored in CSV format, we process the font information using an \textbf{LSTM}~\cite{hochreiter1997long} model, where 
 each font is encoded as a unique token to train the network. Simultaneously, we utilize the bitmap image 
-rendering of each paragraph to train an \textbf{EfficientNetV2} model \cite{efficientnet}. Additionally, we employ a pretrained from scratch \textbf{RoBERTa} language model \cite{mishra2024modularmultimodalmachinelearning}, 
+rendering of each paragraph to train an \textbf{EfficientNetV2} model \cite{efficientnet}. Additionally, we employ a pretrained from scratch \textbf{RoBERTa} language model \cite{mishra:tel-04665528}, 
 on scientific corpus, to make predictions based on the tex modality. Subsequently, we 
 integrate all three trained models into a unified multimodal architecture, freezing their weights of each modality backbone and adding 
 additional layers to capture intermodality interactions through mechanisms like Gated Multimodal Units 
@@ -171,21 +148,15 @@ normalized coordinate data for each paragraph, and paragraph embeddings derived 
 just before the softmax layer. To capture sequential information across multiple paragraphs, we train a 
 Conditional Random Field (CRF)~\cite{crf} or Transformer layer on top of the extracted features. The goal is to utilize 
 relative information to contextualize each paragraph and accurately determine its label. Our model 
-categorizes paragraphs into four major classes: (1) Proof-like, (2) Theorem-like, (3) Basic (neither 
-proof nor theorem), and (4) an Overlap reject class that arises from preprocessing discrepancies.
+categorizes paragraphs into four major classes: (1) \textbf{Proof-like}, (2) \textbf{Theorem-lik}, (3) \textbf{Basic} (neither 
+proof nor theorem), and (4) an \textbf{Overlap} reject class that arises from preprocessing discrepancies.
 
 \section{Demonstation scenario}
-
-% Add repository and video information
-The complete implementation of TheoremView, including source code, documentation, and example datasets, 
-is available at \url{https://gitlab.di.ens.fr/mishra/sys-demo}. A comprehensive demonstration video 
-showcasing the system's capabilities can be found at \url{https://youtu.be/demo-link}.
-
 The UI of the demo is organized into several segments (for an overview see Figure~\ref{fig:system-arch}), each serving a specific function:
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{images/sys-demo-arch.png}
+    \includegraphics[width=0.75\textwidth]{images/sys-demo-arch.png}
     \caption{Systems architecture of the various UI components
     }
     \label{fig:system-arch}
@@ -216,51 +187,52 @@ and storage strategies.
     \item \textbf{Predict and Preview}: Users can choose which base model to apply, either unimodal or multimodal, along with 
     sequential processing of paragraphs using a Conditional Random Field (CRF), Transformer, or no sequential processing at all, 
     allowing for a total of 12 possible combinations. Additionally, users have the option to preview or download the results 
-    (see Figure \ref{fig:system-arch} for visualization of results).
+    (see Figure \ref{fig:system-arch}).
 
-    \begin{figure}[h]
-        \centering
-        \begin{subfigure}{0.45\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{images/buttons.png}
-            \caption{UI Buttons to run select the prediction model}
-            \label{fig:buttons}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}{0.45\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{images/extractions.png}
-            \caption{Extracted Information}
-            \label{fig:extractions}
-        \end{subfigure}
-        \vskip\baselineskip
-        \begin{subfigure}{0.45\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{images/json_output.png}
-            \caption{Extracted Information in JSON format.}
-            \label{fig:json_output}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}{0.45\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{images/vis_on_pdf.png}
-            \caption{Visualizations annotated on the PDF.}
-            \label{fig:vis_on_pdf}
-        \end{subfigure}
-        \caption{Various visual elements in the demo.}
-        \label{fig:combined}
-    \end{figure}
+    % \begin{figure}[h]
+    %     \centering
+    %     \begin{subfigure}{0.45\textwidth}
+    %         \centering
+    %         \includegraphics[width=\textwidth]{images/buttons.png}
+    %         \caption{UI Buttons to run select the prediction model}
+    %         \label{fig:buttons}
+    %     \end{subfigure}
+    %     \hfill
+    %     \begin{subfigure}{0.45\textwidth}
+    %         \centering
+    %         \includegraphics[width=\textwidth]{images/extractions.png}
+    %         \caption{Extracted Information}
+    %         \label{fig:extractions}
+    %     \end{subfigure}
+    %     \vskip\baselineskip
+    %     \begin{subfigure}{0.45\textwidth}
+    %         \centering
+    %         \includegraphics[width=\textwidth]{images/json_output.png}
+    %         \caption{Extracted Information in JSON format.}
+    %         \label{fig:json_output}
+    %     \end{subfigure}
+    %     \hfill
+    %     \begin{subfigure}{0.45\textwidth}
+    %         \centering
+    %         \includegraphics[width=\textwidth]{images/vis_on_pdf.png}
+    %         \caption{Visualizations annotated on the PDF.}
+    %         \label{fig:vis_on_pdf}
+    %     \end{subfigure}
+    %     \caption{Various visual elements in the demo.}
+    %     \label{fig:combined}
+    % \end{figure}
 
     \item \textbf{Summary and Statistics}: This section provides a breakdown of the inference time for the current run, as well as 
     for any previous runs that have been cached, enabling comparative analysis (see Figure~\ref{fig:model_comp}).
 
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=\textwidth]{images/comparitive-v3.png}
-        \caption{Comparisons of predictions from different model runs}
-        \label{fig:model_comp}
-    \end{figure}
 \end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/comparitive-v3.png}
+    \caption{Comparisons of predictions from different model runs}
+    \label{fig:model_comp}
+\end{figure}
 
 %
 \begin{thebibliography}{10}
@@ -268,15 +240,15 @@ and storage strategies.
 \bibitem{mishra2024modularmultimodalmachinelearning}
 Mishra, S., Gauquier, A., Senellart, P.: Modular Multimodal Machine Learning for Extraction of Theorems and Proofs in Long Scientific Documents (Extended Version). arXiv preprint arXiv:2307.09047 (2024). \url{https://arxiv.org/abs/2307.09047}
 
+\bibitem{mishra:tel-04665528}
+Mishra, S.: Multimodal Extraction of Proofs and Theorems from the Scientific Literature. PhD thesis, Universit{\'e} Paris Sciences \& Lettres (2024). \url{https://hal.science/tel-04665528}
+
 
 \bibitem{doceng_paper}
 Mishra, S., Pluvinage, L., Senellart, P.: Towards extraction of theorems and proofs in scholarly articles. In: Healy, P., Bilauca, M., Bonnici, A. (eds.) DocEng '21: ACM Symposium on Document Engineering 2021, Limerick, Ireland, August 24-27, 2021, pp. 25:1--25:4. Association for Computing Machinery, New York, NY, USA (2021). \doi{10.1145/3469096.3475059}
 
 \bibitem{mishra2024first}
 Mishra, S., Brihmouche, Y., Delemazure, T., Gauquier, A., Senellart, P.: First steps in building a knowledge base of mathematical results. In: Proceedings of the Fourth Workshop on Scholarly Document Processing (SDP 2024), pp. 165--174 (2024)
-
-\bibitem{jcdl_paper}
-Mishra, S., Gauquier, A., Senellart, P.: Multimodal Machine Learning for Extraction of Theorems and Proofs in the Scientific Literature. CoRR abs/2307.09047 (2023). \doi{10.48550/arXiv.2307.09047}
 
 \bibitem{hochreiter1997long}
 Hochreiter, S., Schmidhuber, J.:  Long short-term memory. In: Neural Computation 9, 8 (1997)
