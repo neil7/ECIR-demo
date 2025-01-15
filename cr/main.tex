@@ -19,7 +19,7 @@
 \title{TheoremView: A Framework for Extracting Theorem-Like Environments from Raw PDFs}
 
 \titlerunning{TheoremView}
-\author{Shrey Mishra\inst{1}\orcidID{0009-0004-2357-9593} \and
+\author{Shrey Mishra\inst{1,4}\orcidID{0009-0004-2357-9593} \and
 	Neil Sharma\inst{2}\orcidID{0009-0003-8770-7374} \and
 	Antoine~Gauquier\inst{1}\orcidID{0009-0005-9573-6364} \and
 	Pierre~Senellart\inst{1,3}\orcidID{0000-0002-7909-5369}}
@@ -27,12 +27,15 @@
 \authorrunning{S. Mishra et al.}
 
 \institute{DI ENS, ENS, CNRS, PSL University, Inria, Paris, France \\
-	\email{shrey.mishra@ens.psl.eu, antoine.gauquier@ens.psl.eu, pierre@senellart.com}
+	\email{antoine.gauquier@ens.psl.eu, pierre@senellart.com}
 	\and
 	Malaviya National Institute of Technology Jaipur \\
 	\email{neil.sharma3000@gmail.com}
 	\and
 	Institut Universitaire de France (IUF)
+	\and
+	Alpha10x \\
+	\email{shrey@alpha10x.com}
 }
 
 \maketitle              % typeset the header of the contribution
@@ -65,6 +68,14 @@ of scientific knowledge. In particular, TheoremKB aims at streamlining
 the retrieval of specific proofs and theorems, allowing quick access to
 targeted mathematical results compared to traditional full-text search
 engines.
+
+Having such a knowledge base can significantly impact the way researchers find information~\cite{doceng_paper}. Some advantages of this system include:
+\begin{enumerate}
+    \item \textbf{Enhanced Accessibility}: TheoremKB streamlines the retrieval of specific proofs and theorems, allowing for quick access to targeted mathematical results, in contrast to traditional search engines that index full-text papers.
+    \item \textbf{Facilitated Knowledge Discovery}: This knowledge base assists researchers in uncovering connections between disparate mathematical results and their applications, thereby enhancing the exploration of specific results, such as NP-hardness in relation to the vertex cover problem.
+    \item \textbf{Identification of Theorem Interdependencies}: TheoremKB helps determine which theorems are used in the proofs of others, which is essential for assessing the impact of errors in foundational results.
+    \item \textbf{Support for Automated Reasoning}: The knowledge base provides a foundation for developing AI systems capable of automated theorem proving, promoting innovative approaches to mathematical problem-solving.
+\end{enumerate}
 
 \subsection{Prior work on Theorems and Proofs Extraction}
 
@@ -141,28 +152,44 @@ The UI of the demo is organized into several segments (for an overview see Figur
 \begin{enumerate}
 	\item \textbf{Upload and Process}: Users can upload PDFs or select from cached examples. The system processes PDFs using Grobid and pdfalto, converts pages to bitmap images, and merges XML outputs to generate a preprocessed \texttt{data.csv} file.
 
-	\item \textbf{Predict and Preview}: Users can select unimodal or multimodal base models, with optional sequential processing using CRF, Transformer, or none, offering 12 possible combinations. Results can be previewed or downloaded (see Figure \ref{fig:predictions_and_vis}).
+	\item \textbf{Predict and Preview}: Users can select unimodal or multimodal base models, with optional sequential processing using CRF, Transformer, or none, offering 12 possible combinations. Results can be previewed or downloaded (see Figure \ref{fig:predictions_and_interface}).
 
 	\item \textbf{Summary and Statistics}: Provides breakdown of inference time for current and cached runs, enabling comparative analysis.
 \end{enumerate}
 
 \begin{figure}[h]
 	\centering
-	\begin{subfigure}[b]{0.6\textwidth}
+	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{images/comparitive-v3.png}
 		\caption{Flow of information across paragraphs}
 		\label{fig:model_comp}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.35\textwidth}
+	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{images/vis_on_pdf.png}
 		\caption{Visualization of predictions annotated on the PDF}
 		\label{fig:vis_on_pdf}
 	\end{subfigure}
-	\caption{Visualizing model predictions}
-	\label{fig:predictions_and_vis}
+	
+	\vspace{0.5cm}
+	
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{images/buttons.png}
+		\caption{Buttons Interface}
+		\label{fig:buttons}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{images/extractions.png}
+		\caption{Extraction Results}
+		\label{fig:extractions}
+	\end{subfigure}
+	\caption{Visualizing model predictions and interface elements}
+	\label{fig:predictions_and_interface}
 \end{figure}
 
 \subsubsection*{Acknowledgments}
