@@ -3,22 +3,12 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{subcaption}
-\usepackage{hyperref}
-\usepackage{xcolor}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=blue,
-    pdftitle={TheoremView: A Framework for Extracting Theorem-Like Environments from Raw PDFs},
-    pdfpagemode=FullScreen,
-}
 
 \begin{document}
-%
-\title{TheoremView: A Framework for Extracting Theorem-Like Environments from Raw PDFs}
 
-\titlerunning{TheoremView}
+\title{TheoremView: A Framework for Extracting Theorem-Like Environments from Raw PDFs}
+\titlerunning{TheoremView: Extracting Theorem-Like Environments from Raw PDFs}
+
 \author{Shrey Mishra\inst{1}\orcidID{0009-0004-2357-9593} \and
 	Neil Sharma\inst{2}\orcidID{0009-0003-8770-7374} \and
 	Antoine~Gauquier\inst{1}\orcidID{0009-0005-9573-6364} \and
@@ -27,7 +17,7 @@
 \authorrunning{S. Mishra et al.}
 
 \institute{DI ENS, ENS, CNRS, PSL University, Inria, Paris, France \\
-	\email{antoine.gauquier@ens.psl.eu, pierre@senellart.com}
+	\email{shrey.mishra@ens.psl.eu, antoine.gauquier@ens.psl.eu, pierre@senellart.com}
 	\and
 	Malaviya National Institute of Technology Jaipur, India \\
 	\email{neil.sharma3000@gmail.com}
@@ -50,7 +40,7 @@
 	\url{https://theoremkb.org/video}.
 
 
-	\keywords{Theorem extraction \and Multimodal learning \and Document analysis \and Machine learning \and Natural language processing}
+	\keywords{Theorem extraction \and Multimodal machine learning \and Document analysis \and Natural language processing}
 \end{abstract}
 
 
@@ -58,7 +48,7 @@
 \subsection{Motivation for Theorem Extraction}
 In contemporary scientific research, articles are primarily published as PDFs, and many
 search engines index entire papers instead of specific scientific results. This paper
-contributes to TheoremKB~\cite{doceng_paper}, a project focused on building a knowledge base of mathematical
+contributes to TheoremKB~\cite{mishra2021towards}, a project focused on building a knowledge base of mathematical
 results across different fields of science. The objective is to improve the accessibility of
 relevant information for researchers, allowing for more effective retrieval and utilization
 of scientific knowledge. In particular, TheoremKB aims at streamlining
@@ -66,20 +56,21 @@ the retrieval of specific proofs and theorems, allowing quick access to
 targeted mathematical results compared to traditional full-text search
 engines.
 
-Having such a knowledge base can significantly impact the way researchers find information~\cite{doceng_paper}. Some advantages of this system include:
+Having such a knowledge base can significantly impact the way researchers
+find information~\cite{mishra2021towards}. Some advantages of this system include:
 \begin{enumerate}
-    \item \textbf{Enhanced Accessibility}: TheoremKB streamlines the retrieval of specific proofs and theorems, allowing for quick access to targeted mathematical results, in contrast to traditional search engines that index full-text papers.
-    \item \textbf{Facilitated Knowledge Discovery}: This knowledge base assists researchers in uncovering connections between disparate mathematical results and their applications, thereby enhancing the exploration of specific results, such as NP-hardness in relation to the vertex cover problem.
-    \item \textbf{Identification of Theorem Interdependencies}: TheoremKB helps determine which theorems are used in the proofs of others, which is essential for assessing the impact of errors in foundational results.
-    \item \textbf{Support for Automated Reasoning}: The knowledge base provides a foundation for developing AI systems capable of automated theorem proving, promoting innovative approaches to mathematical problem-solving.
+	\item \textbf{Enhanced Accessibility}: TheoremKB streamlines the retrieval of specific proofs and theorems, allowing for quick access to targeted mathematical results, in contrast to traditional search engines that index full-text papers.
+	\item \textbf{Facilitated Knowledge Discovery}: TheoremKB assists researchers in uncovering connections between disparate mathematical results and their applications, thereby enhancing the exploration of specific results.
+	\item \textbf{Identification of Theorem Interdependencies}: TheoremKB helps determine which theorems are used in the proofs of others, which is essential for assessing the impact of errors in foundational results.
+	\item \textbf{Support for Automated Reasoning}: TheoremKB provides a foundation for developing AI systems capable of automated theorem proving, promoting innovative approaches to mathematical problem-solving.
 \end{enumerate}
 
 \subsection{Prior work on Theorems and Proofs Extraction}
 
-Previous attempts to address this task include the work presented in~\cite{doceng_paper}, which focused on
+Previous attempts to address this task include the work presented in~\cite{mishra2021towards}, which focused on
 initial explorations of extraction from PDFs framed as object detection and text classification problems.
 This approach utilized font visuals and text modalities but operated only at the text-line level. Subsequent
-research, such as~\cite{mishra2024modularmultimodalmachinelearning}, refined the methodology by incorporating contextual information
+research, such as~\cite{mishra2024multimodal}, refined the methodology by incorporating contextual information
 surrounding paragraphs and employing multimodal systems to unify the extraction model.
 The TheoremView framework offers a user interface to visualize the results extracted by various models in
 an end-to-end system that directly takes PDFs as input and displays the extracted results. It is designed
@@ -90,7 +81,10 @@ objective of this paper is to present an easy-to-use interface that facilitates 
 in a modular manner.
 
 \section{Methodology}
-We propose a modular approach to extract raw information from PDFs. We utilize \textbf{Grobid}~\cite{GROBID} and \textbf{pdfalto}~\cite{pdfalto} to convert
+We propose a modular approach to extract raw information from PDFs. We
+utilize
+\textbf{Grobid}\footnote{\url{https://github.com/kermitt2/grobid}}~\cite{grobid}
+and \textbf{pdfalto}\footnote{\url{https://github.com/kermitt2/pdfalto}} to convert
 the documents into valid XML formats. The XML generated by Grobid organizes the content into paragraphs,
 while the XML from pdfalto provides details segmented into text lines along with associated font information.
 We then employ a merging script to correlate the font information with each paragraph extracted by Grobid.
@@ -99,7 +93,7 @@ paragraph on the page (indicating the page number as well as vertical and horizo
 extracted from Grobid, and the font information used within those paragraphs. For a schematic diagram on data pipeline
 refer to Figure \ref{fig:datapipeline}.
 
-\begin{figure}[h]
+\begin{figure}
 	\centering
 	\includegraphics[width=.9\textwidth]{images/preprocessing.pdf}
 	\caption{Data pipeline for extracting and processing information from PDFs}
@@ -108,14 +102,17 @@ refer to Figure \ref{fig:datapipeline}.
 
 Once the information is stored in CSV format, we process the font information using an \textbf{LSTM}~\cite{hochreiter1997long} model, where
 each font is encoded as a unique token to train the network. Simultaneously, we utilize the bitmap image
-rendering of each paragraph to train an \textbf{EfficientNetV2} model \cite{efficientnet}. Additionally, we employ a pretrained from scratch \textbf{RoBERTa} language model \cite{mishra:tel-04665528},
+rendering of each paragraph to train an \textbf{EfficientNetV2} model
+\cite{tan2021efficientnetv2}. Additionally, we employ a pretrained from
+scratch \textbf{RoBERTa} language model \cite{phdthesis},
 on scientific corpus, to make predictions based on the text modality. Subsequently, we
 integrate all three trained models into a unified multimodal architecture, freezing their weights of each modality backbone and adding
 additional layers to capture intermodality interactions through mechanisms like Gated Multimodal Units
-(GMU)~\cite{arevalo2020gated} or cross-modality attention similar to ViLBERT~\cite{DBLP:conf/nips/LuBPL19} that capture intermodality dependencies. Refer to Figure \ref{fig:generalpipeline} for feature extraction.
+(GMU)~\cite{arevalo2020gated} or cross-modality attention similar to
+ViLBERT~\cite{lu2019vilbert} that capture intermodality dependencies. Refer to Figure \ref{fig:generalpipeline} for feature extraction.
 
 
-\begin{figure}[h]
+\begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{images/general_pipeline.pdf}
 	\caption{Model inference pipeline (adding the sequential paragraph component)}
@@ -127,7 +124,7 @@ With a set of base features extracted from either the unimodal or multimodal app
 features for all paragraphs within the PDF. This process incorporates normalized page information,
 normalized coordinate data for each paragraph, and paragraph embeddings derived from the raw features
 just before the softmax layer. To capture sequential information across multiple paragraphs, we train a
-Conditional Random Field (CRF)~\cite{crf} or Transformer layer on top of the extracted features. The goal is to utilize
+Conditional Random Field (CRF)~\cite{CRF2001Lafferty} or Transformer layer on top of the extracted features. The goal is to utilize
 relative information to contextualize each paragraph and accurately determine its label. Our model
 categorizes paragraphs into four major classes: (1) \textbf{Proof}, (2) \textbf{Theorem-like}, (3) \textbf{Basic} (neither
 proof nor theorem), and (4) an \textbf{Overlap} reject class that arises from preprocessing discrepancies.
@@ -136,7 +133,7 @@ proof nor theorem), and (4) an \textbf{Overlap} reject class that arises from pr
 
 The TheoremView demo interface, built using Streamlit, follows a modular architecture with distinct functional components. The frontend allows users to upload PDFs or select from cached samples for metadata processing using Grobid and pdfalto tools, with results stored as CSV files. Users can run various ML models (unimodal or multimodal) through a pipeline that calculates processing time, generates bounding boxes, creates cropped images of theorems/proofs, and produces analytical graphs. The system implements efficient caching using pickle files for frequently accessed PDFs and ML model results.
 
-\begin{figure}[h]
+\begin{figure}
 	\centering
 	\includegraphics[width=0.85\textwidth]{images/sys-demo-arch.png}
 	\caption{Systems architecture of the various UI components
@@ -154,88 +151,52 @@ The UI of the demo is organized into several segments (for an overview see Figur
 	\item \textbf{Summary and Statistics}: Provides breakdown of inference time for current and cached runs, enabling comparative analysis.
 \end{enumerate}
 
-\begin{figure}[h]
+\begin{figure}
 	\centering
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{images/comparitive-v3.png}
 		\caption{Flow of information across paragraphs}
-		\label{fig:model_comp}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{images/vis_on_pdf.png}
 		\caption{Visualization of predictions annotated on the PDF}
-		\label{fig:vis_on_pdf}
 	\end{subfigure}
-	
+
 	\vspace{0.5cm}
-	
+
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{images/buttons.png}
 		\caption{Buttons Interface}
-		\label{fig:buttons}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{images/extractions.png}
 		\caption{Extraction Results}
-		\label{fig:extractions}
 	\end{subfigure}
 	\caption{Visualizing model predictions and interface elements}
 	\label{fig:predictions_and_interface}
 \end{figure}
 
-\subsubsection*{Acknowledgments}
-This work was funded in part by the French government under
-management of Agence Nationale de la Recherche as part of the
-“Investissements d’avenir” program, reference ANR-19-P3IA-0001
-(PRAIRIE 3IA Institute). This work was also made possible through
-HPC resources of IDRIS granted under allocation 2020-AD011012097
-made by GENCI (Jean Zay supercomputer).
+\begin{credits}
+	\subsubsection{\ackname}
+	This work was funded in part by the French government under
+	management of Agence Nationale de la Recherche as part of the
+	“Investissements d’avenir” program, reference ANR-19-P3IA-0001
+	(PRAIRIE 3IA Institute). This work was also made possible through
+	HPC resources of IDRIS granted under allocation 2020-AD011012097
+	made by GENCI (Jean Zay supercomputer).
 
-\clearpage
-\begin{thebibliography}{10}
+	\subsubsection{\discintname}
+	The authors have no competing interests to declare that are relevant to
+	the content of this article.
+\end{credits}
 
-	\bibitem{mishra2024modularmultimodalmachinelearning}
-	Mishra, S., Gauquier, A., Senellart, P.: Modular Multimodal Machine Learning for Extraction of Theorems and Proofs in Long Scientific Documents (Extended Version). arXiv preprint arXiv:2307.09047 (2024). \url{https://arxiv.org/abs/2307.09047}
+\bibliographystyle{splncs04}
+\bibliography{bibliography}
 
-	\bibitem{mishra:tel-04665528}
-	Mishra, S.: Multimodal Extraction of Proofs and Theorems from the Scientific Literature. PhD thesis, Universit{\'e} Paris Sciences \& Lettres (2024). \url{https://hal.science/tel-04665528}
-
-
-	\bibitem{doceng_paper}
-	Mishra, S., Pluvinage, L., Senellart, P.: Towards extraction of theorems and proofs in scholarly articles. In: Healy, P., Bilauca, M., Bonnici, A. (eds.) DocEng '21: ACM Symposium on Document Engineering 2021, Limerick, Ireland, August 24-27, 2021, pp. 25:1--25:4. Association for Computing Machinery, New York, NY, USA (2021). \doi{10.1145/3469096.3475059}
-
-	\bibitem{mishra2024first}
-	Mishra, S., Brihmouche, Y., Delemazure, T., Gauquier, A., Senellart, P.: First steps in building a knowledge base of mathematical results. In: Proceedings of the Fourth Workshop on Scholarly Document Processing (SDP 2024), pp. 165--174 (2024)
-
-	\bibitem{hochreiter1997long}
-	Hochreiter, S., Schmidhuber, J.:  Long short-term memory. In: Neural Computation 9, 8 (1997)
-
-	\bibitem{arevalo2020gated}
-	Arevalo, J., Solorio, T., Montes-y Gómez, M., A González, F.: Gated multimodal networks. In: Neural Computing and Applications 32 (2020).
-
-	\bibitem{GROBID}
-	GROBID: \url{https://github.com/kermitt2/grobid}, GitHub (2008--2024). swh:1:dir:dab86b296e3c3216e2241968f0d63b68e8209d3c
-
-	\bibitem{pdfalto}
-	pdfalto: \url{https://github.com/kermitt2/pdfalto}, GitHub (2017--2024). swh:1:dir:4b5e8b8c8e3c3216e2241968f0d63b68e8209d3c
-
-	\bibitem{efficientnet}
-	Tan, M., Le, Q.V.: EfficientNetV2: Smaller Models and Faster Training. In: Proceedings of the 38th International Conference on Machine Learning, PMLR 139, pp. 10096--10106 (2021)
-
-	\bibitem{crf}
-	Lafferty, J., McCallum, A., Pereira, F.C.N.: Conditional Random Fields: Probabilistic Models for Segmenting and Labeling Sequence Data. In: Proceedings of the Eighteenth International Conference on Machine Learning, ICML '01, pp. 282--289. Morgan Kaufmann Publishers Inc., San Francisco, CA, USA (2001)
-
-	\bibitem{transformer}
-	Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A.N., Kaiser, Ł., Polosukhin, I.: Attention is All you Need. In: Advances in Neural Information Processing Systems, pp. 5998--6008 (2017)
-
-	\bibitem{DBLP:conf/nips/LuBPL19}
-	Lu, J., Batra, D., Parikh, D., Lee, S.: ViLBERT: Pretraining Task-Agnostic Visiolinguistic Representations for Vision-and-Language Tasks. In: Advances in Neural Information Processing Systems 32: Annual Conference on Neural Information Processing Systems 2019, NeurIPS 2019, Vancouver, BC, Canada, pp. 13--23 (2019)
-
-\end{thebibliography}
 \end{document}
